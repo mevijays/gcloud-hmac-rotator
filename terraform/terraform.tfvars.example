@@ -1,0 +1,5 @@
+project_id     = "your-project-id"
+region         = "us-central1"
+service_account_name = "hmac-rotator"
+gke_cluster_name = "your-gke-cluster"
+k8s_namespace  = "default"

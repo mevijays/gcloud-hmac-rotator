@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hmac-rotator-config
+  namespace: default
+  labels:
+    app: hmac-rotator
+    component: config
+data:
+  # Replace with your actual service account email
+  SERVICE_ACCOUNT_EMAIL: "YOUR_SERVICE_ACCOUNT_EMAIL@YOUR_PROJECT_ID.iam.gserviceaccount.com"
+  SECRET_NAME: "gcs-hmac-key"
+  MAX_VERSIONS_TO_KEEP: "2"

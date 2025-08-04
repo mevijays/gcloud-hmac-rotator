@@ -1,0 +1,53 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: hmac-rotator-cronjob
+  namespace: default
+  labels:
+    app: hmac-rotator
+    component: cronjob
+spec:
+  # Run every 90 days at 2 AM UTC
+  schedule: "0 2 */90 * *"
+  timeZone: "UTC"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  startingDeadlineSeconds: 300
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: hmac-rotator
+            component: cronjob
+        spec:
+          serviceAccountName: hmac-rotator-sa
+          restartPolicy: Never
+          containers:
+          - name: hmac-rotator
+            # Replace with your container image
+            image: gcr.io/YOUR_PROJECT_ID/hmac-rotator:latest
+            imagePullPolicy: Always
+            envFrom:
+            - configMapRef:
+                name: hmac-rotator-config
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "250m"
+              limits:
+                memory: "512Mi"
+                cpu: "500m"
+            securityContext:
+              allowPrivilegeEscalation: false
+              runAsNonRoot: true
+              runAsUser: 1000
+              capabilities:
+                drop:
+                - ALL
+              readOnlyRootFilesystem: true
+          nodeSelector:
+            kubernetes.io/os: linux
+      backoffLimit: 3
+      activeDeadlineSeconds: 600

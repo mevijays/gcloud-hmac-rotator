@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  hmac-rotator:
+    build: .
+    environment:
+      - SERVICE_ACCOUNT_EMAIL=hmac-rotator@your-project-id.iam.gserviceaccount.com
+      - SECRET_NAME=gcs-hmac-key
+      - MAX_VERSIONS_TO_KEEP=2
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/service-account-key.json
+    volumes:
+      - ./service-account-key.json:/app/service-account-key.json:ro
+    command: python app.py
+
+  test:
+    build: .
+    environment:
+      - SERVICE_ACCOUNT_EMAIL=hmac-rotator@your-project-id.iam.gserviceaccount.com
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/service-account-key.json
+    volumes:
+      - ./service-account-key.json:/app/service-account-key.json:ro
+    command: python test_setup.py

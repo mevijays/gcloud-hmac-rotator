@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hmac-rotator-manual
+  namespace: default
+  labels:
+    app: hmac-rotator
+    component: manual-job
+spec:
+  template:
+    metadata:
+      labels:
+        app: hmac-rotator
+        component: manual-job
+    spec:
+      serviceAccountName: hmac-rotator-sa
+      restartPolicy: Never
+      containers:
+      - name: hmac-rotator
+        # Replace with your container image
+        image: gcr.io/YOUR_PROJECT_ID/hmac-rotator:latest
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: hmac-rotator-config
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+      nodeSelector:
+        kubernetes.io/os: linux
+  backoffLimit: 3
+  activeDeadlineSeconds: 600
