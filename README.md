@@ -2,6 +2,29 @@
 
 This project provides an automated solution for creating and rotating GCS HMAC keys using Google Secret Manager while following least privilege principles.
 
+## Quick Local Testing
+
+For immediate testing with your GCP project `tflabs` and bucket `mevijays`:
+
+```bash
+# 1. Setup local environment
+./setup_local.sh setup
+
+# 2. Run HMAC key rotation test
+./setup_local.sh test
+```
+
+See [LOCAL_DEVELOPMENT.md](LOCAL_DEVELOPMENT.md) for detailed local testing instructions.
+
+## Configuration
+
+The application is configured via environment variables in `.env`:
+
+- **PROJECT_ID**: `tflabs` 
+- **BUCKET_NAME**: `mevijays`
+- **SECRET_NAME**: `test`
+- **SERVICE_ACCOUNT_EMAIL**: `hmac-rotator@tflabs.iam.gserviceaccount.com`
+
 ## Architecture
 
 - **GKE Cluster**: Standard cluster with Workload Identity Federation enabled
